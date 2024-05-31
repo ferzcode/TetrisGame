@@ -1,6 +1,7 @@
 package tetris;
 
-import controller.BoardController;
+import model.BoardController;
+import controller.TetrisKeyAdapter;
 import model.Board;
 import view.BoardDrawer;
 import view.FinishDialog;
@@ -8,8 +9,6 @@ import view.StatusBar;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -47,7 +46,7 @@ public class Tetris extends JFrame {
         boardController.addObserver(boardDrawer);
         boardController.addObserver(statusBar);
         boardDrawer.setFocusable(true);
-        boardDrawer.addKeyListener(new TetrisKeyAdapter());
+        boardDrawer.addKeyListener(new TetrisKeyAdapter(boardController));
 
         add(statusBar, BorderLayout.NORTH);
         add(boardDrawer);
@@ -58,7 +57,6 @@ public class Tetris extends JFrame {
 
         setResizable(false);
         setLocationRelativeTo(null);
-        setResizable(false);
         setVisible(true);
     }
 
@@ -90,49 +88,7 @@ public class Tetris extends JFrame {
                 statusBar.setStatusBarText("Game over");
 
                 // Сохранение рекорда игрока
-                FinishDialog finishDialog = new FinishDialog(Tetris.this, playerName, board.getNumberLinesRemoved());
-            }
-        }
-    }
-
-    class TetrisKeyAdapter extends KeyAdapter {
-        @Override
-        public void keyPressed(KeyEvent e) {
-            if (!board.isStarted())
-                return;
-
-            int keycode = e.getKeyCode();
-            switch (keycode) {
-                case KeyEvent.VK_LEFT: {
-                    if (boardController.ableMove(board.getCurrentFigure(),
-                            new Point(board.getCurX() - 1, board.getCurY())))
-                        boardController.move(board.getCurrentFigure(),
-                                new Point(board.getCurX() - 1, board.getCurY()));
-                    break;
-                }
-                case KeyEvent.VK_RIGHT: {
-                    if (boardController.ableMove(board.getCurrentFigure(),
-                            new Point(board.getCurX() + 1, board.getCurY())))
-                        boardController.move(board.getCurrentFigure(),
-                                new Point(board.getCurX() + 1, board.getCurY()));
-                    break;
-                }
-                case KeyEvent.VK_DOWN: {
-                    boardController.rotate(BoardController.Rotation.LEFT);
-                    break;
-                }
-                case KeyEvent.VK_UP: {
-                    boardController.rotate(BoardController.Rotation.RIGHT);
-                    break;
-                }
-                case KeyEvent.VK_SPACE: {
-                    boardController.dropDown();
-                    break;
-                }
-                case KeyEvent.VK_D: {
-                    boardController.down();
-                    break;
-                }
+                FinishDialog finishDialog = new FinishDialog(Tetris.this, playerName, boardController.getBoard().getNumberLinesRemoved());
             }
         }
     }

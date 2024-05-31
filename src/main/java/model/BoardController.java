@@ -1,8 +1,5 @@
-package controller;
+package model;
 
-import model.Board;
-import model.Figure;
-import model.Tetrominoe;
 import observer.ConcreteObservable;
 import java.awt.Point;
 
