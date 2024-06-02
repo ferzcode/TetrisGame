@@ -41,6 +41,7 @@ public final class BoardController extends ConcreteObservable {
         if (!ableMove(newFigure, new Point(BOARD_WIDTH / 2,
                 BOARD_HEIGHT - 1 + newFigure.getMinY()))) {
             board.setStarted(false);
+            notifyObservers(board.getNumberLinesRemoved());
             return;
         }
 
@@ -48,6 +49,7 @@ public final class BoardController extends ConcreteObservable {
         board.setCurX(BOARD_WIDTH / 2);
         board.setCurY(BOARD_HEIGHT - 1 + board.getCurrentFigure().getMinY());
         board.setFellStatus(false);
+        notifyObservers(board.getNumberLinesRemoved());
     }
 
     /**
@@ -57,6 +59,7 @@ public final class BoardController extends ConcreteObservable {
         for (int i = 0; i < BOARD_HEIGHT * BOARD_WIDTH; i++) {
             board.setFigure(i, Tetrominoe.Empty);
         }
+        notifyObservers(board.getNumberLinesRemoved());
     }
 
     /**
@@ -93,7 +96,7 @@ public final class BoardController extends ConcreteObservable {
         board.setCurX(point.x);
         board.setCurY(point.y);
         board.setCurrentFigure(figure);
-        notifyObservers(0);
+        notifyObservers(board.getNumberLinesRemoved());
     }
 
     /**
@@ -148,7 +151,7 @@ public final class BoardController extends ConcreteObservable {
             return;
 
         board.setCurrentFigure(result);
-        notifyObservers(0);
+        notifyObservers(board.getNumberLinesRemoved());
     }
 
     /**
@@ -185,19 +188,18 @@ public final class BoardController extends ConcreteObservable {
     /**
      * Change current figure's coordinate to one line down if it is possible.
      */
-
     public void down() {
         if (!ableMove(board.getCurrentFigure(), new Point(board.getCurX(), board.getCurY() - 1))) {
             pieceDropped();
         } else {
             move(board.getCurrentFigure(), new Point(board.getCurX(), board.getCurY() - 1));
         }
+        notifyObservers(board.getNumberLinesRemoved());
     }
 
     /**
      * Lower the figure as low as possible until it touches another figure.
      */
-
     public void dropDown() {
         int newY = board.getCurY();
 
@@ -212,6 +214,7 @@ public final class BoardController extends ConcreteObservable {
         }
 
         pieceDropped();
+        notifyObservers(board.getNumberLinesRemoved());
     }
 
     /**
@@ -219,7 +222,6 @@ public final class BoardController extends ConcreteObservable {
      * <p>Calls a check to see if any string is now complete.
      * Causes the creation of the following shape<p/>
      */
-
     public void pieceDropped() {
         for (int i = 0; i < FIGURE_SIZE; ++i) {
             int x = board.getCurX() + board.getCurrentFigure().getCoordinate(i).x;

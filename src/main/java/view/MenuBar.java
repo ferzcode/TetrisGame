@@ -8,7 +8,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * A menu bar for the Tetris game window, providing options for game information, rules, records, and exiting the game.
+ */
 public class MenuBar extends JMenuBar {
+    /**
+     * Constructs a MenuBar with the specified parent JFrame.
+     *
+     * @param parentsFrame the parent JFrame
+     */
     public MenuBar(JFrame parentsFrame) {
         JMenu menu = new JMenu("Game");
 

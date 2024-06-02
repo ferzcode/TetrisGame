@@ -3,13 +3,30 @@ package tetris;
 import java.io.*;
 import java.util.*;
 
+/**
+ * A class for managing high score records for the Tetris game.
+ * It provides methods to add new records, retrieve existing records, and save records to a file.
+ */
 public class RecordManager {
     private final String fileName;
 
+    /**
+     * Constructs a RecordManager with the specified file name.
+     *
+     * @param fileName the name of the file to store the records
+     */
     public RecordManager(String fileName) {
         this.fileName = fileName;
     }
 
+    /**
+     * Adds a new record for the specified player with the given score.
+     * If the player already has a record, the new score replaces the old one.
+     * Records are sorted by score in descending order, and only the top 3 records are kept.
+     *
+     * @param playerName the name of the player
+     * @param score       the score achieved by the player
+     */
     public void addRecord(String playerName, int score) {
         Map<String, Integer> records = loadRecords();
         records.put(playerName, score);
@@ -32,10 +49,20 @@ public class RecordManager {
         saveRecords(records);
     }
 
+    /**
+     * Retrieves the current high score records.
+     *
+     * @return a map containing player names and their corresponding scores
+     */
     public Map<String, Integer> getRecords() {
         return loadRecords();
     }
 
+    /**
+     * Loads high score records from the file.
+     *
+     * @return a map containing player names and their corresponding scores
+     */
     private Map<String, Integer> loadRecords() {
         Map<String, Integer> records = new HashMap<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
@@ -54,6 +81,11 @@ public class RecordManager {
         return records;
     }
 
+    /**
+     * Saves high score records to the file.
+     *
+     * @param records a map containing player names and their corresponding scores
+     */
     private void saveRecords(Map<String, Integer> records) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (Map.Entry<String, Integer> entry : records.entrySet()) {
